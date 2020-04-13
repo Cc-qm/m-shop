@@ -5,6 +5,9 @@ import store from './store'
 
 // 引入全局样式
 import '@/styles/main.scss'
+// 引入rem文件
+import '@/utils/rem.js'
+
 Vue.config.productionTip = false
 
 new Vue({
