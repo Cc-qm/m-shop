@@ -11,10 +11,11 @@ instance.interceptors.request.use(config => {
 })
 
 instance.interceptors.response.use(res => {
+  console.log(res)
   if (res.data.err === 0) {
     return res.data
   } else {
-    Promise.reject(res.data.msg)
+    return Promise.reject(res.data.msg)
   }
 })
 export default instance

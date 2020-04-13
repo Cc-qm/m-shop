@@ -23,6 +23,11 @@ const routes = [
     path: '/member',
     component: () => import('@/views/Member')
   },
+  // 登录页面
+  {
+    path: '/login',
+    component: () => import('@/views/Login')
+  },
   {
     path: '/',
     redirect: '/home'
@@ -38,4 +43,15 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  if (to.path === '/member') {
+    if (localStorage.getItem('token')) {
+      next()
+    } else {
+      next('/login')
+    }
+  } else {
+    next()
+  }
+})
 export default router
