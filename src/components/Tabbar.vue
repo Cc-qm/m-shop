@@ -37,6 +37,7 @@ export default {
 nav{
     position: fixed;
     left:0px;
+    font-size: .14rem;
     bottom:0px;
     z-index: 10;
     background: #fff;

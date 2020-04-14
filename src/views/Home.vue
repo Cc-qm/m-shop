@@ -37,12 +37,15 @@ export default {
 .address{
   background: #66ccff;
   text-align: center;
-  height: .54Rem;
+  height: .54rem;
   line-height: .54rem;
   color: #fff;
   padding-left: .05rem;
   i{
     font-size: .1rem;
   }
+}
+.van-search{
+  height: .54rem;
 }
 </style>
