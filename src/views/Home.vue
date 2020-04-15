@@ -27,13 +27,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .iconfont {
-//     font-family:"iconfont" !important;
-//     font-size: 16px;
-//     font-style: normal;
-//     -webkit-font-smoothing: antialiased;
-//     -moz-osx-font-smoothing: grayscale;
-// }
 .address{
   background: #66ccff;
   text-align: center;
