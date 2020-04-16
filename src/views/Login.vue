@@ -56,6 +56,7 @@ export default {
   },
   methods: {
     ...mapMutations('tabbar', ['show', 'hide']),
+    ...mapMutations('user', ['setUserMessage']),
     // 提交登录请求
     submit () {
       if (!this.username.trim() || !this.password.trim()) {
@@ -65,12 +66,14 @@ export default {
         })
         return
       }
+      // 登录模块与注册模块
       if (this.btnName === '立即登录') {
         instance.post('/api/login', {
           username: this.username,
           password: this.password
         }).then(res => {
           localStorage.setItem('token', res.token)
+          this.setUserMessage(res.data)
           // 跳转到用户页面
           this.$router.replace('/Member')
         }).catch(err => {
@@ -101,7 +104,7 @@ export default {
           }
         }
         instance.post('/api/reg', params, config).then(res => {
-          console.log(res)
+          // console.log(res)
         }).catch(err => {
           Dialog({
             message: err,

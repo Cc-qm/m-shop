@@ -23,6 +23,16 @@ const routes = [
     path: '/member',
     component: () => import('@/views/Member')
   },
+  // 修改用户信息页面
+  {
+    path: '/member/updateMessage',
+    component: () => import('@/views/updateMessage')
+  },
+  // 修改用户密码页面
+  {
+    path: '/member/updatePassword',
+    component: () => import('@/views/updatePassword')
+  },
   // 登录页面
   {
     path: '/login',

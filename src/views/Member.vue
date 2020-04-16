@@ -2,7 +2,7 @@
    <div class="center">
       <div class="center-view">
         <div class="avator">
-          <img src="http://localhost:3000/upload/user/c62b68c6837903c6fdd2d72966ecf0bb.jpeg"   class="avator-icon">
+          <img :src="'http://localhost:3000/'+userMessage.icon"   class="avator-icon">
           <div class="nick-name" @click="cancel">注销登录</div>
         </div>
         <ul class="my-order-tab">
@@ -14,12 +14,12 @@
               <span>商品订单</span>
             </li>
         </ul>
-        <div class="margin-set systen-set">
+        <div class="margin-set systen-set" @click="toggle('/member/updatePassword')">
             <i class="iconfont icon-mima"></i>
             <span>修改密码</span>
             <i class="iconfont icon-jiantouarrow487"></i>
         </div>
-        <div class="margin-set systen-set">
+        <div class="margin-set systen-set" @click="toggle('/member/updateMessage')">
             <i class="iconfont icon-ziyuan"></i>
             <span>修改用户信息</span>
             <i class="iconfont icon-jiantouarrow487"></i>
@@ -29,11 +29,19 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
+  computed: {
+    ...mapState('user', ['userMessage'])
+  },
   methods: {
     cancel () {
       window.localStorage.removeItem('token')
       this.$router.go(0)
+    },
+    // 跳转页面方法
+    toggle (path) {
+      this.$router.push(path)
     }
   }
 }
