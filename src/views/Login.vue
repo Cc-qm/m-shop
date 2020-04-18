@@ -1,6 +1,7 @@
 <template>
    <!-- 登录注册 组件 -->
   <div id="apps">
+    <div class="back iconfont icon-fanhui" @click="back"></div>
       <div class="login">
           <div class="welcome"><img src="@/assets/images/welcome.png"></div>
           <div class="login-form">
@@ -17,7 +18,7 @@
               <div class="login-inp" style="border:0">
                 <label>头像上传</label>
                 <van-uploader :max-count="1" v-model="fileList"/>
-               </div>
+              </div>
             </div>
             <div class="login-inp"><a href="#" @click="submit()">{{btnName}}</a></div>
           </div>
@@ -75,7 +76,7 @@ export default {
           localStorage.setItem('token', res.token)
           this.setUserMessage(res.data)
           // 跳转到用户页面
-          this.$router.replace('/Member')
+          this.$router.replace('/member')
         }).catch(err => {
           Dialog({
             message: err,
@@ -118,6 +119,9 @@ export default {
         message: '该功能正在努力开发中~~~',
         closeOnClickOverlay: true
       })
+    },
+    back () {
+      this.$router.push('/home')
     }
   },
   created () {
@@ -152,6 +156,13 @@ export default {
       top: -.3rem;
       left: .3rem;
       color: #f00;
+    }
+    .back{
+      position: absolute;
+      top: .1rem;
+      left: .1rem;
+      font-size: .25rem;
+      color: cornsilk;
     }
 }
 </style>

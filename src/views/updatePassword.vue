@@ -1,5 +1,6 @@
 <template>
   <div class="update">
+    <div class="back iconfont icon-fanhui" @click="back"></div>
     <van-form @submit="onSubmit">
       <van-field
         v-model="oldPassword"
@@ -25,7 +26,7 @@
         placeholder="确认密码"
         :rules="[{ required: true, message: '两次输入密码不一致', validator: (value, rule) => value==newPassword}]"
       />
-      <div style="margin: .16rem;">
+      <div style="margin: .2rem;">
         <van-button round block type="info" native-type="submit">
           修改密码
         </van-button>
@@ -36,7 +37,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { Form, Field, Button, Dialog } from 'vant'
 import instance from '@/utils/http'
 
@@ -50,6 +51,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('tabbar', ['show', 'hide']),
     onSubmit (values) {
       delete values.newPassword2
       values.username = this.userMessage.username
@@ -75,15 +77,30 @@ export default {
           closeOnClickOverlay: true
         })
       })
+    },
+    back () {
+      this.$router.back()
     }
   },
   computed: {
     ...mapState('user', ['userMessage'])
+  },
+  created () {
+    this.hide()
+  },
+  destroyed () {
+    // this.show()
   }
 }
 </script>
 
 <style lang="scss" scoped>
+  .back{
+    position: absolute;
+    top: .1rem;
+    left: .1rem;
+    font-size: .25rem;
+  }
   .update{
     margin: 2rem 0;
   }

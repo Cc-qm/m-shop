@@ -2,8 +2,12 @@
    <div class="center">
       <div class="center-view">
         <div class="avator">
-          <img :src="'http://localhost:3000/'+userMessage.icon"   class="avator-icon">
-          <div class="nick-name" @click="cancel">注销登录</div>
+          <div class="img">
+            <img :src="'http://localhost:3000/'+userMessage.icon"   class="avator-icon">
+          </div>
+          <div class="nick-name">你好{{userMessage.nickname}}</div>
+          <div class="nick-name cancel" @click="cancel">注销登录</div>
+          <div class="message">个性签名：{{userMessage.message}}</div>
         </div>
         <ul class="my-order-tab">
             <li>
@@ -29,20 +33,24 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 export default {
   computed: {
     ...mapState('user', ['userMessage'])
   },
   methods: {
+    ...mapMutations('tabbar', ['show']),
     cancel () {
       window.localStorage.removeItem('token')
-      this.$router.go(0)
+      this.$router.push('/login')
     },
     // 跳转页面方法
     toggle (path) {
       this.$router.push(path)
     }
+  },
+  created () {
+    this.show()
   }
 }
 </script>
@@ -54,24 +62,53 @@ export default {
     .avator{
       width: 3.75rem;
       height: 1.7rem;
-      background: #66ccff;
+      background: linear-gradient(#ffffff, #66ccff);;
       padding: .64rem 0 0 1rem;
       color: #ffffff;
       background-size: cover;
       display: flex;
-      img{
+      .img{
         width: 0.63rem;
         height: 0.63rem;
-        border-radius: 35px;
-        margin-right:20px ;
-        border: 2px solid #fff;
-        margin: 6px 20px 0px -64px;
+        border-radius: 50% 50%;
+        margin-right: 20px;
+        border: .02rem solid #fff;
+        margin: .06rem .20rem 0rem -.64rem;
+        overflow: hidden;
+      }
+      img{
+        // border-radius: .35rem;
+        width: 100%;
       }
       .nick-name{
-        width: 0.64rem;
+        // width: 0.64rem;
         height: 0.24rem;
-        margin-top: 23px;
-        font-size: 16px;
+        margin-top: .1rem;
+        margin-right: .23rem;
+        font-size: .16rem;
+        color: rgb(0, 87, 85);
+      }
+      .cancel{
+        color: rgb(241, 241, 241);
+        font-size: .14rem;
+        padding: .05rem;
+        background: rgb(97, 97, 97);
+        border-radius: .5rem;
+        line-height: .14rem;
+      }
+      .message{
+        position: absolute;
+        top: 1rem;
+        left: 1.2rem;
+        font-size: .14rem;
+        margin-right: .5rem;
+        color: chocolate;
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
       }
     }
     .my-order-tab{
@@ -83,7 +120,7 @@ export default {
       text-align: center;
       font-size: .14rem;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: .10rem;
       li{
         flex: 1;
         display: flex;

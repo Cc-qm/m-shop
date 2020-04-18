@@ -11,7 +11,7 @@ instance.interceptors.request.use(config => {
 })
 
 instance.interceptors.response.use(res => {
-  // console.log(res)
+  console.log(res)
   if (res.data.err === 0) {
     return res.data
   } else {
