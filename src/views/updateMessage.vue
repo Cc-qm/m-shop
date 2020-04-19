@@ -150,10 +150,12 @@ export default {
 
   .update{
     margin: .8rem 0;
+    // background: linear-gradient(#ffffff, #ade4ff, #ffffff);
     .van-cell{
       font-size: .14rem;
       line-height: .24rem;
       padding: .1rem .16rem;
+      background: none
     }
     .van-button__text{
       font-size: .14rem;

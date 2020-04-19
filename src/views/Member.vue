@@ -2,12 +2,12 @@
    <div class="center">
       <div class="center-view">
         <div class="avator">
-          <div class="img">
-            <img :src="'http://localhost:3000/'+userMessage.icon"   class="avator-icon">
+          <div class="img" @click="previewImg">
+            <img :src="'http://localhost:3000'+userMessage.icon"   class="avator-icon">
           </div>
-          <div class="nick-name">你好{{userMessage.nickname}}</div>
+          <div class="nick-name">你好, {{userMessage.nickname}}</div>
           <div class="nick-name cancel" @click="cancel">注销登录</div>
-          <div class="message">个性签名：{{userMessage.message}}</div>
+          <div class="message">个性签名：{{userMessage.message || '无'}}</div>
         </div>
         <ul class="my-order-tab">
             <li>
@@ -25,7 +25,7 @@
         </div>
         <div class="margin-set systen-set" @click="toggle('/member/updateMessage')">
             <i class="iconfont icon-ziyuan"></i>
-            <span>修改用户信息</span>
+            <span>修改或完善用户信息</span>
             <i class="iconfont icon-jiantouarrow487"></i>
         </div>
       </div>
@@ -34,6 +34,9 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import { ImagePreview } from 'vant'
+import Vue from 'vue'
+Vue.use(ImagePreview)
 export default {
   computed: {
     ...mapState('user', ['userMessage'])
@@ -47,6 +50,14 @@ export default {
     // 跳转页面方法
     toggle (path) {
       this.$router.push(path)
+    },
+    previewImg () {
+      ImagePreview({
+        images: ['http://localhost:3000' + this.userMessage.icon],
+        closeable: true,
+        closeIconPosition: 'top-left',
+        showIndex: false
+      })
     }
   },
   created () {
@@ -62,7 +73,7 @@ export default {
     .avator{
       width: 3.75rem;
       height: 1.7rem;
-      background: linear-gradient(#ffffff, #66ccff);;
+      background: linear-gradient(#ffffff, #66ccff);
       padding: .64rem 0 0 1rem;
       color: #ffffff;
       background-size: cover;
@@ -121,6 +132,7 @@ export default {
       font-size: .14rem;
       align-items: center;
       margin-bottom: .10rem;
+      border-bottom: .01rem solid rgb(231, 231, 231);
       li{
         flex: 1;
         display: flex;

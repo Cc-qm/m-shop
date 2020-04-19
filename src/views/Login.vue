@@ -105,7 +105,13 @@ export default {
           }
         }
         instance.post('/api/reg', params, config).then(res => {
-          // console.log(res)
+          // console.log('res', res)
+          Dialog({
+            message: res.msg,
+            closeOnClickOverlay: true
+          }).then(() => {
+            this.isShowLogin = true
+          })
         }).catch(err => {
           Dialog({
             message: err,

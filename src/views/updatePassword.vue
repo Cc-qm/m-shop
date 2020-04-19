@@ -103,5 +103,19 @@ export default {
   }
   .update{
     margin: 2rem 0;
+    // background: linear-gradient(#ffffff, #ade4ff, #ffffff);
+    .van-cell{
+      font-size: .14rem;
+      line-height: .24rem;
+      padding: .1rem .16rem;
+      background: none;
+    }
+    .van-button__text{
+      font-size: .14rem;
+    }
+    .login-inp{
+      padding: .1rem .16rem;
+      font-size: .14rem;
+    }
   }
 </style>
