@@ -43,8 +43,10 @@ export default {
   },
   methods: {
     ...mapMutations('tabbar', ['show']),
+    ...mapMutations('user', ['deleteUserMessage']),
     cancel () {
-      window.localStorage.removeItem('token')
+      window.localStorage.clear()
+      this.deleteUserMessage()
       this.$router.push('/login')
     },
     // 跳转页面方法

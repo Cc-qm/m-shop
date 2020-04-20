@@ -8,6 +8,11 @@ const routes = [
     path: '/home',
     component: () => import('@/views/Home')
   },
+  // 搜索商品页面
+  {
+    path: '/home/search',
+    component: () => import('@/views/Search')
+  },
   // 分类页面
   {
     path: '/category',

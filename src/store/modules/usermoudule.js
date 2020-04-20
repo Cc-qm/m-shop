@@ -6,6 +6,9 @@ const module = {
   mutations: {
     setUserMessage (state, item) {
       state.userMessage = item
+    },
+    deleteUserMessage (state) {
+      state.userMessage = {}
     }
   }
 }
