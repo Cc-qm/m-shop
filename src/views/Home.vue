@@ -43,19 +43,22 @@
         </van-list>
       </van-pull-refresh>
     </div>
+    <van-button type="default" class="backTop" @click="backTop" v-show="isShowing">
+      <van-icon name="upgrade" size=".5rem"/>
+    </van-button>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
-import { Search, Col, Row, Swipe, SwipeItem, Lazyload, List, PullRefresh } from 'vant'
+import { Search, Col, Row, Swipe, SwipeItem, Lazyload, List, PullRefresh, Icon, Button } from 'vant'
 import instance from '@/utils/http'
 
 Vue.use(Search).use(Col).use(Row).use(Swipe).use(SwipeItem).use(Lazyload, {
   lazyComponent: true,
   loading: '/lazyimg.jpeg.gif'
-}).use(List).use(PullRefresh)
+}).use(List).use(PullRefresh).use(Icon).use(Button)
 export default {
   data () {
     return {
@@ -63,6 +66,9 @@ export default {
       images: [], // 轮播图
       list: [], // 显示的商品
       goodsIndex: 0, // 商品索引
+      isShowing: false, // 是否显示放回顶部图标
+      scrollTrigger: false, // 是否在向上滚动途中
+      scrollTop: 0,
       loading: false,
       finished: false,
       error: false,
@@ -151,7 +157,38 @@ export default {
     // 点击搜索后跳转
     goToSearch () {
       this.$router.push('/home/search')
+    },
+    // 返回顶部
+    backTop () {
+      // document.body.scrollTop = document.documentElement.scrollTop = 0
+      // this.isShowing = false
+      const that = this
+      // 防止用户频繁点击返回顶部按钮，待返回顶部成功后设置scrollTrigger为初始值
+      if (that.scrollTrigger) {
+        return
+      }
+      // 获取当前距离顶部的数值，设置每次上滑的高度直到滚动到顶部为止
+      let scrollTop = this.scrollTop
+      let steep = scrollTop / 2000
+      const timer = setInterval(() => {
+        that.scrollTrigger = true
+        scrollTop -= steep
+        steep += 5
+        if (scrollTop <= 0) {
+          clearInterval(timer)
+          that.scrollTrigger = false
+        }
+        // 由于是加在box上的滚动，直接用window.scrollTop无效，查看了getScrollTop方法滚动的元素，所以加在box上
+        document.body.scrollTop = document.documentElement.scrollTop = scrollTop
+      }, 30)
+    },
+    backTopShow () {
+      this.scrollTop = document.documentElement.scrollTop
+      this.scrollTop > 100 ? this.isShowing = true : this.isShowing = false
     }
+  },
+  mounted () {
+    window.addEventListener('scroll', this.backTopShow, true)
   }
 }
 </script>
@@ -248,5 +285,16 @@ export default {
       }
     }
   }
+}
+.backTop{
+  position: fixed;
+  padding: 0;
+  bottom: .7rem;
+  right: .2rem;
+  z-index: 2;
+  color: #66ccff;
+  background: none;
+  border: none;
+  border-radius: 50% 50%;
 }
 </style>
