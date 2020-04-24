@@ -3,6 +3,7 @@
     <div class="header">
       <div class="back iconfont icon-fanhui" @click="back"></div>
       <van-search
+        v-focus
         v-model="value"
         show-action
         shape="round"
@@ -47,6 +48,7 @@
       </van-list>
     </div>
     <div v-show="errText" style="text-align:center">{{errText}}</div>
+    <BackTop></BackTop>
   </div>
 </template>
 <script>
@@ -76,7 +78,7 @@ export default {
   methods: {
     ...mapMutations('tabbar', ['hide']),
     onSearch () {
-      console.log(this.value)
+      // console.log(this.value)
       this.list = []
       this.limit = 0
       this.isActive = false
@@ -86,7 +88,8 @@ export default {
       this.errText = ''
     },
     back () {
-      this.$router.push('/home')
+      // this.$router.push('/home')
+      this.$router.back()
     },
     getGoods () {
       instance.get('/api/goods/goods', {
@@ -97,7 +100,7 @@ export default {
           _limit: this.limit = this.limit + 10
         }
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         this.list = res.data
         // 加载状态结束
         this.loading = false
@@ -110,6 +113,7 @@ export default {
       })
     },
     onLoad () {
+      // console.log(11111)
       this.getGoods()
     },
     sortList () {
@@ -130,9 +134,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-// .search{
-//   height: 1000px;
-// }
+.search{
+ font-size: .14rem;
+ .van-search__content--round {
+    border-radius: 999px;
+    height: .34rem;
+  }
+}
   .header{
     display: flex;
     .back{

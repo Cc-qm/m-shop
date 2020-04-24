@@ -1,7 +1,7 @@
 <template>
   <div>
-    <van-row>
-      <van-col span='4' @click="toggle"  class="address">{{userMessage.address?userMessage.address.split('/')[2]:'请登录'}}<i class="iconfont">&#xe628;</i></van-col>
+    <!-- <van-row>
+      <van-col span='4' @click="toggle"  class="address">{{userMessage?userMessage.address?userMessage.address.split('/')[2]:'完善信息':'请登录'}}<i class="iconfont">&#xe628;</i></van-col>
       <van-search
         v-model="value"
         shape="round"
@@ -9,7 +9,8 @@
         placeholder="请输入搜索关键词"
         @click="goToSearch"
       />
-    </van-row>
+    </van-row> -->
+    <Title></Title>
     <div class="banner">
       <van-swipe :autoplay="3000">
         <van-swipe-item v-for="(image, index) in images" :key="index">
@@ -43,22 +44,20 @@
         </van-list>
       </van-pull-refresh>
     </div>
-    <van-button type="default" class="backTop" @click="backTop" v-show="isShowing">
-      <van-icon name="upgrade" size=".5rem"/>
-    </van-button>
+    <BackTop></BackTop>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
-import { Search, Col, Row, Swipe, SwipeItem, Lazyload, List, PullRefresh, Icon, Button } from 'vant'
+import { Search, Col, Row, Swipe, SwipeItem, Lazyload, List, PullRefresh } from 'vant'
 import instance from '@/utils/http'
 
 Vue.use(Search).use(Col).use(Row).use(Swipe).use(SwipeItem).use(Lazyload, {
   lazyComponent: true,
   loading: '/lazyimg.jpeg.gif'
-}).use(List).use(PullRefresh).use(Icon).use(Button)
+}).use(List).use(PullRefresh)
 export default {
   data () {
     return {
@@ -66,9 +65,6 @@ export default {
       images: [], // 轮播图
       list: [], // 显示的商品
       goodsIndex: 0, // 商品索引
-      isShowing: false, // 是否显示放回顶部图标
-      scrollTrigger: false, // 是否在向上滚动途中
-      scrollTop: 0,
       loading: false,
       finished: false,
       error: false,
@@ -89,7 +85,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('user', ['userMessage']),
+    // ...mapState('user', ['userMessage']),
     ...mapState('goods', ['goodsList'])
   },
   methods: {
@@ -145,76 +141,44 @@ export default {
       setTimeout(() => { // 延迟执行，以获取最新更新的商品
         this.onLoad()
       }, 500)
-    },
-    // 点击地址后跳转
-    toggle () {
-      if (this.userMessage.address) {
-        this.$router.push('/member/updateMessage')
-      } else {
-        this.$router.push('/login')
-      }
-    },
-    // 点击搜索后跳转
-    goToSearch () {
-      this.$router.push('/home/search')
-    },
-    // 返回顶部
-    backTop () {
-      // document.body.scrollTop = document.documentElement.scrollTop = 0
-      // this.isShowing = false
-      const that = this
-      // 防止用户频繁点击返回顶部按钮，待返回顶部成功后设置scrollTrigger为初始值
-      if (that.scrollTrigger) {
-        return
-      }
-      // 获取当前距离顶部的数值，设置每次上滑的高度直到滚动到顶部为止
-      let scrollTop = this.scrollTop
-      let steep = scrollTop / 2000
-      const timer = setInterval(() => {
-        that.scrollTrigger = true
-        scrollTop -= steep
-        steep += 5
-        if (scrollTop <= 0) {
-          clearInterval(timer)
-          that.scrollTrigger = false
-        }
-        // 由于是加在box上的滚动，直接用window.scrollTop无效，查看了getScrollTop方法滚动的元素，所以加在box上
-        document.body.scrollTop = document.documentElement.scrollTop = scrollTop
-      }, 30)
-    },
-    backTopShow () {
-      this.scrollTop = document.documentElement.scrollTop
-      this.scrollTop > 100 ? this.isShowing = true : this.isShowing = false
     }
-  },
-  mounted () {
-    window.addEventListener('scroll', this.backTopShow, true)
+    // // 点击地址后跳转
+    // toggle () {
+    //   if (this.userMessage) {
+    //     this.$router.push('/member/updateMessage')
+    //   } else {
+    //     this.$router.push('/login')
+    //   }
+    // },
+    // // 点击搜索后跳转
+    // goToSearch () {
+    //   this.$router.push('/home/search')
+    // }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.address{
-  background: #66ccff;
-  text-align: center;
-  height: .54rem;
-  line-height: .54rem;
-  color: #fff;
-  padding-left: .05rem;
-  i{
-    font-size: .1rem;
-  }
-}
-.van-row{
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1;
-  .van-search{
-    height: .54rem;
-  }
-}
-
+// .address{
+//   background: #66ccff;
+//   text-align: center;
+//   height: .54rem;
+//   line-height: .54rem;
+//   color: #fff;
+//   padding-left: .05rem;
+//   i{
+//     font-size: .1rem;
+//   }
+// }
+// .van-row{
+//   position: fixed;
+//   top: 0;
+//   width: 100%;
+//   z-index: 1;
+//   .van-search{
+//     height: .54rem;
+//   }
+// }
 .banner{
   background: #66ccff;
   padding-top: .1rem;
@@ -285,16 +249,5 @@ export default {
       }
     }
   }
-}
-.backTop{
-  position: fixed;
-  padding: 0;
-  bottom: .7rem;
-  right: .2rem;
-  z-index: 2;
-  color: #66ccff;
-  background: none;
-  border: none;
-  border-radius: 50% 50%;
 }
 </style>

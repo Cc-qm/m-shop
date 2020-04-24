@@ -10,7 +10,8 @@ export default new Vuex.Store({
   plugins: [createPersistedState({
     reducer (data) {
       return {
-        user: data.user
+        user: data.user,
+        goods: data.goods
       }
     }
   })],
