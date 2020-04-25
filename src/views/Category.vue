@@ -3,22 +3,27 @@
     <Title></Title>
     <van-tree-select height="3rem%" :items="items" :main-active-index.sync="active">
       <template #content>
-        <!-- <div v-show="active === 0" class="itemList">
-          <div class="item">
-            <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b8c63a2024528fe5410ebe669b7d2407.jpg" alt="">
-            <p>Redmi全自动波轮洗衣机1A 8kg</p>
-          </div>
-          <div class="item">
-            <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b8c63a2024528fe5410ebe669b7d2407.jpg" alt="">
-            <p>Redmi全自动波轮洗衣机1A 8kg</p>
-          </div>
-        </div> -->
-        <div v-show="active === index" v-for="(item, index) in itemsList" :key="index" class="itemList">
-          <div class="item" v-for="(val) in item" :key="val._id">
+        <ul v-show="active === index" v-for="(item, index) in itemsList" :key="index" class="itemList">
+          <!-- <div class="item" v-for="(val) in item" :key="val._id">
             <img v-lazy="val.img" alt="">
             <p>{{val.name}}</p>
-          </div>
-        </div>
+          </div> -->
+             <router-link
+              class="item"
+              v-for="val in item"
+              :key="val._id"
+              :to="{
+                name: 'detail',
+                params: {
+                  id: val._id
+                }
+              }"
+              tag="li"
+            >
+              <img v-lazy="val.img" alt="">
+              <p>{{val.name}}</p>
+            </router-link>
+        </ul>
       </template>
     </van-tree-select>
   </div>
@@ -78,7 +83,7 @@ export default {
       }
     })
     this.category(this.items)
-    console.log(this.itemsList)
+    // console.log(this.itemsList)
   }
 }
 </script>

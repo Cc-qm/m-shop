@@ -8,6 +8,13 @@ const routes = [
     path: '/home',
     component: () => import('@/views/Home')
   },
+  // 商品详情页
+  {
+    name: 'detail',
+    path: '/detail/:id',
+    component: () => import('@/views/Detail'),
+    props: true
+  },
   // 搜索商品页面
   {
     path: '/home/search',

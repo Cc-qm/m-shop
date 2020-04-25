@@ -36,15 +36,36 @@
         offset="10"
       >
         <!-- <van-cell v-for="item in list" :key="item" :title="item" /> -->
-        <div class="item" v-for="item in list" :key="item._id">
+        <!-- <div class="item" v-for="item in list" :key="item._id">
           <img v-lazy="item.img" alt="">
           <div class="left">
             <h3>{{item.name}}</h3>
             <p class="price">￥{{item.price}}</p>
             <p class="detail">{{item.detail}}</p>
           </div>
-        </div>
+        </div> -->
         <!-- <div v-for="(item, index) in list" :key="index">{{item.name}}</div> -->
+        <ul>
+          <router-link
+              class="item"
+              v-for="item in list"
+              :key="item._id"
+              :to="{
+                name: 'detail',
+                params: {
+                  id: item._id
+                }
+              }"
+              tag="li"
+            >
+              <img v-lazy="item.img" alt="">
+              <div class="left">
+                <h3>{{item.name}}</h3>
+                <p class="price">￥{{item.price}}</p>
+                <p class="detail">{{item.detail}}</p>
+              </div>
+            </router-link>
+        </ul>
       </van-list>
     </div>
     <div v-show="errText" style="text-align:center">{{errText}}</div>

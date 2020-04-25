@@ -105,6 +105,7 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }
+      console.log(params)
       instance.patch('/api/updatemessage', params, config).then(res => {
         this.setUserMessage(res.data)
         Dialog({

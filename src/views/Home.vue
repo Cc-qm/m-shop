@@ -1,15 +1,5 @@
 <template>
   <div>
-    <!-- <van-row>
-      <van-col span='4' @click="toggle"  class="address">{{userMessage?userMessage.address?userMessage.address.split('/')[2]:'完善信息':'请登录'}}<i class="iconfont">&#xe628;</i></van-col>
-      <van-search
-        v-model="value"
-        shape="round"
-        background="#66ccff"
-        placeholder="请输入搜索关键词"
-        @click="goToSearch"
-      />
-    </van-row> -->
     <Title></Title>
     <div class="banner">
       <van-swipe :autoplay="3000">
@@ -32,15 +22,32 @@
           error-text="请求失败，点击重新加载"
           offset="100"
         >
-          <div class="van-clearfix item-list">
+          <ul class="van-clearfix item-list">
             <!-- <van-cell v-for="item in list" :key="item.id" :title="item.name" /> -->
-            <div class="item" v-for="item in list" :key="item._id">
+            <!-- <div class="item" v-for="item in list" :key="item._id">
               <img  v-lazy="item.img" alt="">
               <div class="detail">{{item.detail}}</div>
               <div class="name">{{item.name}}</div>
               <div class="price">￥{{item.price}}</div>
-            </div>
-          </div>
+            </div> -->
+            <router-link
+              class="item"
+              v-for="item in list"
+              :key="item._id"
+              :to="{
+                name: 'detail',
+                params: {
+                  id: item._id
+                }
+              }"
+              tag="li"
+            >
+              <img  v-lazy="item.img" alt="">
+              <div class="detail">{{item.detail}}</div>
+              <div class="name">{{item.name}}</div>
+              <div class="price">￥{{item.price}}</div>
+            </router-link>
+          </ul>
         </van-list>
       </van-pull-refresh>
     </div>
