@@ -49,6 +49,8 @@ export default {
       height: .34rem;
   }
   .address{
+    display: flex;
+    overflow: hidden;
     background: #66ccff;
     text-align: center;
     height: .54rem;

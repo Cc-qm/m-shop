@@ -49,7 +49,13 @@ export default {
   computed: {
     ...mapState('user', ['userMessage']),
     isLove () {
-      return this.userMessage.loveGoods.includes(this.id)
+      let isHave = false
+      this.userMessage.loveGoods.forEach(item => {
+        if (item._id === this.id) {
+          isHave = true
+        }
+      })
+      return isHave
     }
   },
   methods: {
@@ -63,14 +69,20 @@ export default {
     },
     // 添加商品到购物车
     addToCart () {
-      if (this.userMessage.cart.includes(this.id)) {
+      let isHave = false
+      this.userMessage.cart.forEach(item => {
+        if (item._id === this.id) {
+          isHave = true
+        }
+      })
+      if (isHave) {
         Dialog({
           message: '已添加过该商品到购物车~',
           closeOnClickOverlay: true
         })
       } else {
         const userMsg = this.userMessage
-        userMsg.cart.push(this.id)
+        userMsg.cart.push({ ...this.goodsInfo, isSelect: false, num: 1 })
         delete userMsg._id
         // console.log(userMsg)
         this.isOver = false
@@ -91,30 +103,18 @@ export default {
     },
     // 添加商品到收藏夹
     addToLove () {
-      console.log(this.id)
-      if (this.userMessage.loveGoods.includes(this.id)) {
-        Dialog({
-          message: '已收藏过该商品~',
-          closeOnClickOverlay: true
+      // console.log(this.id)
+      const userMsg = this.userMessage
+      if (this.isLove) {
+        userMsg.loveGoods = userMsg.loveGoods.filter(item => {
+          return item._id !== this.id
         })
       } else {
-        const userMsg = this.userMessage
-        userMsg.loveGoods.push(this.id)
-        delete userMsg._id
-        console.log(userMsg)
-        instance.patch('/api/updatemessage', userMsg).then(res => {
-          this.setUserMessage(res.data)
-          Dialog({
-            message: '已收藏该商品~',
-            closeOnClickOverlay: true
-          })
-        }).catch(err => {
-          Dialog({
-            message: err,
-            closeOnClickOverlay: true
-          })
-        })
+        userMsg.loveGoods.push(this.goodsInfo)
       }
+      console.log(userMsg.loveGoods)
+      delete userMsg._id
+      instance.patch('/api/updatemessage', userMsg).then(res => this.setUserMessage(res.data))
     }
   },
   created () {
