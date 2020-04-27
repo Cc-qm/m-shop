@@ -166,26 +166,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .address{
-//   background: #66ccff;
-//   text-align: center;
-//   height: .54rem;
-//   line-height: .54rem;
-//   color: #fff;
-//   padding-left: .05rem;
-//   i{
-//     font-size: .1rem;
-//   }
-// }
-// .van-row{
-//   position: fixed;
-//   top: 0;
-//   width: 100%;
-//   z-index: 1;
-//   .van-search{
-//     height: .54rem;
-//   }
-// }
 .banner{
   background: #66ccff;
   padding-top: .1rem;

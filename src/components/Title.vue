@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="title">
     <van-row>
       <van-col span='4' @click="toggle"  class="address">{{userMessage?userMessage.address?userMessage.address.split('/')[2]:'完善信息':'请登录'}}<i class="iconfont">&#xe628;</i></van-col>
       <van-search
@@ -45,8 +45,8 @@ export default {
 
 <style lang="scss" scoped>
   .van-search__content--round {
-      border-radius: 999px;
-      height: .34rem;
+    border-radius: 999px;
+    height: .34rem;
   }
   .address{
     display: flex;

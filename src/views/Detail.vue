@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="back iconfont icon-fanhui" @click="back"></div>
-    <div class="banner">
+    <div class="banner" @click="previewImg">
       <van-swipe :autoplay="3000" @change="onChange">
         <van-swipe-item v-for="(image, index) in [goodsInfo.img,goodsInfo.img,goodsInfo.img,goodsInfo.img]" :key="index">
           <img v-lazy="image" />
@@ -20,7 +20,7 @@
     </div>
     <van-goods-action>
       <van-goods-action-icon icon="chat-o" text="客服" color="#07c160" />
-      <van-goods-action-icon icon="cart-o" text="购物车" to="/cart" :badge="userMessage.cart.length"/>
+      <van-goods-action-icon icon="cart-o" text="购物车" to="/cart" :badge="userMessage.cart&&userMessage.cart.length"/>
       <van-goods-action-icon icon="star" :text="isLove?'已收藏':'收藏'" :color="isLove?'#ff5000':'#ccc'" @click="addToLove"/>
       <van-goods-action-button type="warning" text="加入购物车" @click="addToCart" :loading="!isOver"/>
       <van-goods-action-button type="danger" text="立即购买" />
@@ -29,14 +29,14 @@
 </template>
 <script>
 import Vue from 'vue'
-import { Swipe, SwipeItem, Lazyload, GoodsAction, GoodsActionIcon, GoodsActionButton, Dialog } from 'vant'
+import { Swipe, SwipeItem, Lazyload, GoodsAction, GoodsActionIcon, GoodsActionButton, Dialog, ImagePreview } from 'vant'
 import { mapMutations, mapState } from 'vuex'
 import instance from '@/utils/http'
 
 Vue.use(Swipe).use(SwipeItem).use(Lazyload, {
   lazyComponent: true,
   loading: '/lazyimg.jpeg.gif'
-}).use(GoodsAction).use(GoodsActionIcon).use(GoodsActionButton).use(Dialog)
+}).use(GoodsAction).use(GoodsActionIcon).use(GoodsActionButton).use(Dialog).use(ImagePreview)
 export default {
   props: ['id'],
   data () {
@@ -49,13 +49,17 @@ export default {
   computed: {
     ...mapState('user', ['userMessage']),
     isLove () {
-      let isHave = false
-      this.userMessage.loveGoods.forEach(item => {
-        if (item._id === this.id) {
-          isHave = true
-        }
-      })
-      return isHave
+      if (this.userMessage.loveGoods) {
+        let isHave = false
+        this.userMessage.loveGoods.forEach(item => {
+          if (item._id === this.id) {
+            isHave = true
+          }
+        })
+        return isHave
+      } else {
+        return false
+      }
     }
   },
   methods: {
@@ -69,6 +73,13 @@ export default {
     },
     // 添加商品到购物车
     addToCart () {
+      if (!localStorage.getItem('token')) {
+        Dialog({
+          message: '请先登录~',
+          closeOnClickOverlay: true
+        })
+        return
+      }
       let isHave = false
       this.userMessage.cart.forEach(item => {
         if (item._id === this.id) {
@@ -103,6 +114,13 @@ export default {
     },
     // 添加商品到收藏夹
     addToLove () {
+      if (!localStorage.getItem('token')) {
+        Dialog({
+          message: '请先登录~',
+          closeOnClickOverlay: true
+        })
+        return
+      }
       // console.log(this.id)
       const userMsg = this.userMessage
       if (this.isLove) {
@@ -115,12 +133,21 @@ export default {
       console.log(userMsg.loveGoods)
       delete userMsg._id
       instance.patch('/api/updatemessage', userMsg).then(res => this.setUserMessage(res.data))
+    },
+    // 点击放大图片查看
+    previewImg () {
+      ImagePreview({
+        images: [this.goodsInfo.img, this.goodsInfo.img, this.goodsInfo.img, this.goodsInfo.img],
+        closeable: true,
+        closeIconPosition: 'top-left',
+        showIndex: false
+      })
     }
   },
   created () {
     this.hide()
     instance.get(`api/goods/goods/${this.id}`).then(res => {
-      // console.log(res.data)
+      console.log(1111111111111111111, res)
       this.goodsInfo = res.data
     })
   },
