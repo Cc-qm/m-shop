@@ -1,6 +1,9 @@
 <template>
   <div class="shopCart">
-    <Title></Title>
+    <div class="title">购物车
+      <!-- <van-icon name="setting" @click="showDelete=!showDelete"/> -->
+      <span @click="showDelete=!showDelete">{{showDelete?'完成':'编辑'}}</span>
+    </div>
     <div class="cartList">
       <ul v-if="userMessage.cart&&userMessage.cart.length > 0">
         <li v-for="item in userMessage.cart" :key="item._id">
@@ -28,7 +31,7 @@
               </div>
             </div>
           </div>
-          <van-icon name="clear" @click="deleteHandle(item)"/>
+          <van-icon name="clear" @click="deleteHandle([item._id])" v-show="showDelete"/>
         </li>
       </ul>
       <div class="nohaveshop" v-else>
@@ -38,19 +41,8 @@
       </div>
     </div>
     <div class="cartfotter" v-if="userMessage.cart&&userMessage.cart.length > 0">
-      <van-submit-bar button-text="去结算" @submit="onSubmit">
-        <van-checkbox
-          v-model="allchecked"
-          checked-color="#66ccff"
-          @click="checkAll"
-          >全选</van-checkbox
-        >
-        <div class="buyprice">
-          <p class="p1">合计</p>
-          <p class="p2">
-            ¥{{ totalprice }}
-          </p>
-        </div>
+      <van-submit-bar :price="totalprice*100" :button-text="showDelete?'删除所选'+'('+sum+')':'去结算'+'('+sum+')'" @submit="onSubmit">
+        <van-checkbox v-model="allchecked" @click="checkAll" checked-color="#66ccff">全选</van-checkbox>
       </van-submit-bar>
     </div>
   </div>
@@ -59,27 +51,29 @@
 <script>
 import Vue from 'vue'
 import { mapMutations, mapState } from 'vuex'
-import { Icon, Checkbox, Stepper, SubmitBar, Toast } from 'vant'
+import { Icon, Checkbox, Stepper, SubmitBar, Toast, Dialog } from 'vant'
 import instance from '@/utils/http'
-Vue.use(Icon).use(Checkbox).use(Stepper).use(SubmitBar).use(Toast)
+Vue.use(Icon).use(Checkbox).use(Stepper).use(SubmitBar).use(Toast).use(Dialog)
 export default {
   data () {
     return {
       // allchecked: false,
       selectedData: [],
       // 总价
-      totalprice: 0
+      totalprice: 0,
+      showDelete: false
     }
   },
   created: function () {
     this.count()
-    this.show()
-    this.userMessage.cart.forEach(item => {
-      if (item.isSelect) {
-        this.selectedData.push(item._id)
-      }
-    })
-    console.log(this.selectedData)
+    if (this.userMessage.cart) {
+      this.userMessage.cart.forEach(item => {
+        if (item.isSelect) {
+          this.selectedData.push(item._id)
+        }
+      })
+    }
+    // console.log(this.selectedData)
   },
   computed: {
     ...mapState('user', ['userMessage']),
@@ -90,6 +84,18 @@ export default {
       },
       set: function () {
       }
+    },
+    // 显示选中的商品总数
+    sum () {
+      let goodsSum = 0
+      if (this.userMessage.cart) {
+        this.userMessage.cart.forEach(item => {
+          if (item.isSelect) {
+            goodsSum += item.num
+          }
+        })
+      }
+      return goodsSum
     }
   },
   methods: {
@@ -110,13 +116,8 @@ export default {
         item.isSelect = true
         this.count()
       }
-      // if (this.selectedData.length < this.userMessage.cart.length) {
-      //   this.allchecked = false
-      // } else {
-      //   this.allchecked = true
-      // }
       this.count()
-      console.log(this.selectedData)
+      // console.log(this.selectedData)
       this.saveToDatabase()
     },
     // 将修改后的数据保存到数据库
@@ -132,17 +133,19 @@ export default {
     onChange (item) {
       Toast.loading({ forbidClick: true })
       this.count()
-      console.log(this.userMessage.cart)
+      // console.log(this.userMessage.cart)
       this.saveToDatabase()
     },
     // 计算价格
     count: function () {
       let totalPrice = 0 // 临时总价
-      this.userMessage.cart.forEach(function (val) {
-        if (val.isSelect) {
-          totalPrice += val.num * val.price // 累计总价
-        }
-      })
+      if (this.userMessage.cart) {
+        this.userMessage.cart.forEach(function (val) {
+          if (val.isSelect) {
+            totalPrice += val.num * val.price // 累计总价
+          }
+        })
+      }
       this.totalprice = totalPrice
     },
     // 全选
@@ -170,6 +173,10 @@ export default {
     // 去结算
     onSubmit () {
       // 选择购买的商品
+      if (this.showDelete) {
+        this.deleteHandle(this.selectedData)
+        return
+      }
       var cartgoods = []
       this.userMessage.cart.forEach(function (item) {
         if (item.isSelect) {
@@ -184,14 +191,25 @@ export default {
       console.log(cartgoods)
     },
     // 删除某一项
-    deleteHandle (item) {
-      const userMsg = this.userMessage
-      delete userMsg._id
-      Toast.loading({ forbidClick: true })
-      userMsg.cart = this.userMessage.cart.filter(obj => obj._id !== item._id)
-      instance.patch('/api/updatemessage', userMsg).then(res => {
-        this.setUserMessage(res.data)
-        Toast.clear()
+    deleteHandle (idArr) {
+      Dialog.confirm({
+        // title: '标题',
+        message: '确认要移除商品吗'
+      }).then(() => {
+        const userMsg = this.userMessage
+        delete userMsg._id
+        Toast.loading({ forbidClick: true })
+        // userMsg.cart = this.userMessage.cart.filter(obj => obj._id !== item._id)
+        userMsg.cart = this.userMessage.cart.filter(item => {
+          // return item._id !== id
+          return !idArr.includes(item._id)
+        })
+        instance.patch('/api/updatemessage', userMsg).then(res => {
+          this.setUserMessage(res.data)
+          Toast.clear()
+        })
+      }).catch(() => {
+        // on cancel
       })
     },
     // 点击跳转详情页
@@ -204,6 +222,23 @@ export default {
 
 <style lang="scss" scoped>
 .shopCart {
+  .title{
+    background: #66ccff;
+    height: .54rem;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    text-align: center;
+    font-size: .18rem;
+    color: #fff;
+    left: 0;
+    line-height: .54rem;
+    span{
+      position: absolute;
+      right: .15rem;
+      font-size: .15rem;
+    }
+  }
   width: 100%;
   min-height: 100vh;
   display: flex;
@@ -316,61 +351,8 @@ export default {
       }
     }
   }
-  .cartfotter {
-    width: 100%;
-    height: .60rem;
-    position: fixed;
+  .van-submit-bar{
     bottom: .5rem;
-    left: 0;
-    .van-submit-bar{
-      position: static;
-    }
-    .van-submit-bar__bar {
-      height: .60rem;
-      font-size: .16rem;
-      .van-checkbox {
-        margin-left: .17rem;
-        ::v-deep .van-checkbox__icon {
-          height: .14rem;
-          line-height: .14rem;
-          .van-icon {
-            width: .14rem;
-            height: .14rem;
-            font-size: .12rem;
-            border: 1px solid #a5a5a5;
-          }
-        }
-        ::v-deep .van-checkbox__label {
-          font-size: .16rem;
-          color: #212121;
-          margin-left: .9rem;
-        }
-      }
-      .buyprice {
-        flex: 1;
-        padding-right: .08rem;
-        text-align: right;
-        display: flex;
-        flex-direction: column;
-        .p1 {
-          font-size: .10rem;
-          color: #001410;
-        }
-        .p2 {
-          font-size: .12rem;
-          color: #66ccff;
-          margin-top: .04rem;
-        }
-      }
-      .van-button--danger {
-        width: 1.30rem;
-        height: .60rem;
-        background: #66ccff;
-        border: none;
-        font-size: .16rem;
-        color: #ffffff;
-      }
-    }
   }
 }
 </style>

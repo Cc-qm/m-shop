@@ -10,7 +10,7 @@
           <div class="message">个性签名：{{userMessage.message || '无'}}</div>
         </div>
         <ul class="my-order-tab">
-            <li>
+            <li  @click="goToOtherPage('/member/loveGoods')">
               <i class="iconfont icon-lujing"></i>
               <span>收藏商品</span>
             </li>
@@ -53,6 +53,7 @@ export default {
     toggle (path) {
       this.$router.push(path)
     },
+    // 预览用户的头像
     previewImg () {
       ImagePreview({
         images: ['http://localhost:3000' + this.userMessage.icon],
@@ -60,6 +61,10 @@ export default {
         closeIconPosition: 'top-left',
         showIndex: false
       })
+    },
+    // 切换页面
+    goToOtherPage (url) {
+      this.$router.push(url)
     }
   },
   created () {

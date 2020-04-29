@@ -130,7 +130,7 @@ export default {
       } else {
         userMsg.loveGoods.push(this.goodsInfo)
       }
-      console.log(userMsg.loveGoods)
+      // console.log(userMsg.loveGoods)
       delete userMsg._id
       instance.patch('/api/updatemessage', userMsg).then(res => this.setUserMessage(res.data))
     },
@@ -147,7 +147,7 @@ export default {
   created () {
     this.hide()
     instance.get(`api/goods/goods/${this.id}`).then(res => {
-      console.log(1111111111111111111, res)
+      // console.log(1111111111111111111, res)
       this.goodsInfo = res.data
     })
   },

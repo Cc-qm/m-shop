@@ -90,7 +90,7 @@ export default {
 
 <style lang="scss" scoped>
 .van-tree-select{
-  margin-top: .54rem;
+  padding-top: .54rem;
   .van-sidebar{
     width: .5rem;
   }

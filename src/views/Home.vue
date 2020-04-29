@@ -149,18 +149,6 @@ export default {
         this.onLoad()
       }, 500)
     }
-    // // 点击地址后跳转
-    // toggle () {
-    //   if (this.userMessage) {
-    //     this.$router.push('/member/updateMessage')
-    //   } else {
-    //     this.$router.push('/login')
-    //   }
-    // },
-    // // 点击搜索后跳转
-    // goToSearch () {
-    //   this.$router.push('/home/search')
-    // }
   }
 }
 </script>
@@ -170,7 +158,7 @@ export default {
   background: #66ccff;
   padding-top: .1rem;
   padding-bottom: .1rem;
-  margin-top: .54rem;
+  padding-top: .54rem;
   .van-swipe{
     border-radius: .1rem;
     width: 3.45rem;

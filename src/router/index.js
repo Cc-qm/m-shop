@@ -40,6 +40,11 @@ const routes = [
     path: '/member/updateMessage',
     component: () => import('@/views/updateMessage')
   },
+  // 收藏商品页
+  {
+    path: '/member/loveGoods',
+    component: () => import('@/views/LoveGoods')
+  },
   // 修改用户密码页面
   {
     path: '/member/updatePassword',
