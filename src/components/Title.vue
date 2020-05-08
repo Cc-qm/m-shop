@@ -1,7 +1,7 @@
 <template>
   <div class="title">
     <van-row>
-      <van-col span='4' @click="toggle"  class="address">{{userMessage?userMessage.address?userMessage.address.split('/')[2]:'完善信息':'请登录'}}<i class="iconfont">&#xe628;</i></van-col>
+      <van-col span='4' @click="toggle"  class="address">{{JSON.stringify(userMessage)!=='{}'?userMessage.address?userMessage.address.split('/')[2]:'完善信息':'请登录'}}<i class="iconfont">&#xe628;</i></van-col>
       <van-search
         v-model="value"
         shape="round"
@@ -29,7 +29,7 @@ export default {
   methods: {
     // 点击地址后跳转
     toggle () {
-      if (this.userMessage) {
+      if (JSON.stringify(this.userMessage) !== '{}') {
         this.$router.push('/member/updateMessage')
       } else {
         this.$router.push('/login')
